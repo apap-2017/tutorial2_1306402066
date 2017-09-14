@@ -1,0 +1,95 @@
+Latihan Project Hello World
+1.
+-ganti baris "@RequestMapping("/hello")" menjadi "@RequestMapping("/hello123")"
+ hasil: tidak terjadi compile error
+-compile dan run project, kemudian buka localhost:8080/hello
+ hasil: muncul page whitelabel error seperti berikut:
+ Whitelabel Error Page
+ 
+ This application has no explicit mapping for /error, so you are seeing this as a fallback.
+ 
+ Thu Sep 14 22:35:41 ICT 2017
+ There was an unexpected error (type=Not Found, status=404).
+ No message available
+
+2.
+-ganti method "index()" menjadi "hello()"
+ hasil: tidak terjadi compile error
+-compile dan run project, kemudian buka localhost:8080/hello
+ hasil: page muncul seperti biasa, tidak ada perubahan
+
+3.
+-ganti string return type menjadi return "hello123";
+ hasil: tidak terjadi compile error
+-compile dan run project, kemudian buka localhost:8080/hello
+ hasil: muncul page whitelabel error seperti berikut:
+ Whitelabel Error Page
+ 
+ This application has no explicit mapping for /error, so you are seeing this as a fallback.
+ 
+ Thu Sep 14 22:53:47 ICT 2017
+ There was an unexpected error (type=Internal Server Error, status=500).
+ Error resolving template "hello123", template might not exist or might not be accessible by any of the configured Template Resolvers
+
+Pertanyaan: Menandakan apakah String yang di-return tersebut?
+Jawaban: String yang di-return menandakan template yang dipanggil oleh page controller untuk ditampilkan di web browser ketika aplikasi sedang berjalan.
+
+Latihan Request Parameter (Query String)
+1.
+-Ubah nilai anotasi RequestMapping dari "/greeting" menjadi "/hello/greeting"
+-Buka localhost: 8080/hello/greeting?name=chanek
+ Hasil: Page yang ditampilkan sama dengan page greeting (Selamat datang chanek!).
+
+2.
+-Akses localhost:8080/greeting
+ Hasil: Muncul whitelabel error page sebagai berikut:
+ Whitelabel Error Page
+ 
+ This application has no explicit mapping for /error, so you are seeing this as a fallback.
+ 
+ Thu Sep 14 23:22:48 ICT 2017
+ There was an unexpected error (type=Bad Request, status=400).
+ Required String parameter 'name' is not present
+-Ubah header method greeting menjadi:
+	public String greeting (@RequestParam(value = "name", required = false) String name , Model model)
+ kemudian buka localhost:8080/greeting
+ Hasil: Page menampilkan tulisan "Selamat datang null!".
+
+3. 
+-Ubah header method greeting menjadi:
+	public String greeting (@RequestParam(value = "name", required = false, defaultValue = "dunia") String name, Model model)
+ kemudian buka localhost:8080/greeting
+ Hasil: Page menampilkan tulisan "Selamat datang dunia!".
+
+4.
+<p th:text="'Selamat datang ' + ${name} + '!'">Sapaan untuk user</p>
+Pertanyaan: Mengapa tulisan “Sapaan untuk user” tidak pernah muncul?
+Jawaban: Karena Thymeleaf secara otomatis melakukan overriding terhadap tulisan "Sapaan untuk user" ketika program dijalankan.
+
+Latihan Path Variable
+1.
+-Akses localhost:8080/greeting/
+ Hasil: Page menampilkan tulisan "Selamat datang dunia!".
+-Ubah method greetingPath menjadi:
+		@RequestMapping(value = {"/greeting", "greeting/{name}"})
+		public String greetingPath (@PathVariable Optional<String> name, Model model)
+		{
+			if (name.isPresent()) {
+				model.addAttribute("name", name.get());
+			} else {
+				model.addAttribute("name" , "dengklek");
+			}
+			return "greeting";
+		}
+-Buka localhost:8080/greeting/
+ Hasil: muncul whitelabel error page sebagai berikut:
+ Whitelabel Error Page
+ 
+ This application has no explicit mapping for /error, so you are seeing this as a fallback.
+ 
+ Fri Sep 15 00:05:59 ICT 2017
+ There was an unexpected error (type=Internal Server Error, status=500).
+ Ambiguous handler methods mapped for HTTP path 'http://localhost:8080/greeting/': {public java.lang.String com.example.demo.controller.PageController.greeting (java.lang.String,org.springframework.ui.Model), public java.lang.String com.example.demo.controller.PageController.greetingPath (java.util.Optional,org.springframework.ui.Model)}
+-Buka localhost:8080/greeting/chanek
+ Hasil: Page menampilkan tulisan "Selamat datang chanek!".
+
