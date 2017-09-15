@@ -25,12 +25,12 @@ public class PageController
 		}
 		
 		@RequestMapping(value = {"/greeting", "greeting/{name}"})
-		public String greetingPath (@PathVariable Optional<String> name, Model model)
+		public String greetingPath(@PathVariable Optional<String> name, Model model)
 		{
 			if (name.isPresent()) {
 				model.addAttribute("name", name.get());
 			} else {
-				model.addAttribute("name" , "dengklek");
+				model.addAttribute("name", "dengklek");
 			}
 			return "greeting";
 		}

@@ -77,7 +77,7 @@ Latihan Path Variable
 			if (name.isPresent()) {
 				model.addAttribute("name", name.get());
 			} else {
-				model.addAttribute("name" , "dengklek");
+				model.addAttribute("name", "dengklek");
 			}
 			return "greeting";
 		}
@@ -93,3 +93,12 @@ Latihan Path Variable
 -Buka localhost:8080/greeting/chanek
  Hasil: Page menampilkan tulisan "Selamat datang chanek!".
 
+Lessons learned:
+-@RequestMapping berfungsi sebagai "call name" ketika aplikasi akan dibuka di web. Misalnya @RequestMapping("/hello", "/hello123") pada metode hello() menyatakan bahwa ada dua cara memanggil metode hello(), yaitu localhost:8080/hello atau localhost:8080/hello123.
+-Menulis call name yang non-existent atau tidak tertulis di @RequestMapping salah satu method ketika menuliskan url aplikasi akan melemparkan error 404 (page tidak ditemukan).
+-Mengubah nama method saja tidak akan mempengaruhi perilaku ketika program di-compile karena ketika dijalankan program akan memanggil method yang sama, namun berbeda namanya saja.
+-Variabel yang di-return pada method yang ada di PageController mereferensikan page yang ada di resources/templates. Jika page yang di-return non-existent atau tidak ada maka ketika dibuka di browser akan melemparkan error 500 (Internal Server Error).
+-Membuka page yang membutuhkan variabel input tanpa menuliskan nilai-nilai input akan melemparkan error 400 (Bad Request) jika default value untuk input yang hilang tidak tersedia.
+-Atribut @RequestParam dengan boolean required yang false akan mengembalikan null jika default value belum di-set. Dengan kata lain, jika required = false maka input user akan diabaikan.
+-Jika ada dua atau lebih @RequestMapping yang memanggil call name yang sama untuk method yang berbeda, maka ketika dijalankan dan dibuka di browser akan terjadi error 500 (Internal Server Error) dengan alasan Ambiguous Handler (dua atau lebih method dengan @RequestMapping yang memanggil call name yang sama).
+-Variabel th:text secara otomatis melakukan override terhadap atribut yang ada di sebuah page html.
